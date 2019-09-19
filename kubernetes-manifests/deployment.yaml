@@ -1,19 +1,19 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: tomcat-test
+  name: tomcat-static
   labels:
-    app: tomcat-test 
+    app: tomcat-static 
 spec:
   replicas: 2
   template:
     metadata:
       labels:
-        app: tomcat-test
+        app: tomcat-static
     spec:
-      hostname: tomcat-test
+      hostname: tomcat-static
       containers:
-      - name: tomcat-test
+      - name: tomcat-static
         image: complete-repo-path
         env:
         - name: ES_JAVA_OPTS
@@ -34,11 +34,16 @@ spec:
           name: api
         volumeMounts:
         - name: data
-          mountPath: /var/lib/tomcat7/webapps
+          mountPath: /usr/local/tomcat7/webapps
+        - name: config
+          mountPath: /usr/local/tomcat7/conf/ROOT
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: tomcat-test
+          claimName: tomcat-static
+      - name: config
+        configMap: 
+          name: tomcat-static
       - name: podinfo
         downwardAPI:
           items:
