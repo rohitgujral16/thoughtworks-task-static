@@ -1,23 +1,16 @@
-FROM ubuntu:16.04
-RUN apt-get update && apt-get -y upgrade
-
-RUN apt-get -y install software-properties-common
-RUN add-apt-repository ppa:webupd8team/java
-RUN apt-get -y update
-
-# Accept the license
-RUN echo "oracle-java7-installer shared/accepted-oracle-license-v1-1 boolean true" | debconf-set-selections
-
-RUN apt-get -y install oracle-java7-installer
-
-# Here comes the tomcat installation
-RUN apt-get -y install tomcat7
-RUN echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/default/tomcat7
-
-# Copying cert and adding to truststore
+FROM oraclelinux
+RUN yum update -y
+RUN yum install wget -y
+RUN yum install java -y
+RUN cd /tmp
+RUN wget http://www-us.apache.org/dist/tomcat/tomcat-7/v7.0.96/bin/apache-tomcat-7.0.96.tar.gz
+RUN tar xzf apache-tomcat-7.0.96.tar.gz
+RUN mv apache-tomcat-7.0.96 /usr/local/tomcat7
+RUN echo "JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64" >> /etc/default/tomcat7
 COPY selfsigned.cer /tmp
-WORKDIR /tmp
-RUN  keytool -import -noprompt -trustcacerts -alias tomcat -file selfsigned.cer -keystore "$JAVA_HOME/jre/lib/security/cacerts" -storepass changeit
+COPY *.zip /usr/local/tomcat7/webapps/ROOT/
+RUN unzip /usr/local/tomcat7/webapps/ROOT/*.zip
+#RUN  keytool -import -noprompt -trustcacerts -alias tomcat -file selfsigned.cer -keystore "$JAVA_HOME/jre/lib/security/cacerts" -storepass changeit
 
 # Expose the default tomcat port
 EXPOSE 8080
