@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tomcat-test
+  name: tomcat-static
   namespace:
   labels:
-    app: tomcat-test
+    app: tomcat-static
 spec:
   type: LoadBalancer
   ports:
@@ -13,4 +13,4 @@ spec:
     targetPort: 8080
     protocol: TCP
   selector:
-    app: tomcat-test
+    app: tomcat-static
