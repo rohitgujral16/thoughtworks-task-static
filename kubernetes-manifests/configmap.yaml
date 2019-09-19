@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: tomcat-test
+  name: tomcat-static
   labels:
-    app: tomcat-test
+    app: tomcat-static
 data:
   server.xml: |
     <?xml version='1.0' encoding='utf-8'?>
